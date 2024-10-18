@@ -123,7 +123,15 @@ public:
     // method to print list
     void print() {
         Node* current = head;
-        if (!curre
+        if (!current) {
+            cout << "Line is empty." << endl;
+            return;
+        }
+        while (current) {
+            cout << current->data << " ";
+            current = current->next;
+        }
+        cout << endl;
 
     }
 
@@ -141,10 +149,32 @@ public:
 // Function to load names from file into a vector
 vector<string> loadNames(const string& filename) {
     vector<string> names;
-    ifstream file(fil
+    ifstream file(filename);
+    string name;
+    while (getline(file, name)) {
+        names.push_back(name);
+    }
+    return names;
+}
 
 // main function
 int main() {
+    srand(time(0)); // Seed for randomness
+    DoublyLinkedList queue;
+    vector<string> names = loadNames("names.txt");
+
+    cout << "Store opens:" << endl;
+    for (int i = 0; i < 5; ++i) {
+        queue.push_back(names[rand() % names.size()]);
+        cout << "    " << names.back() << " joined the line" << endl;
+    }
+
+    for (int timeStep = 1; timeStep <= 20; ++timeStep) {
+        cout << "Time step #" << timeStep << ":" << endl;
+
+        // Check if a customer is to be served (40% probability)
+        if (rand() % 100 < 40 && queue.getSize() > 0) {
+            string servedCustomer = q
 
     
     return 0;
