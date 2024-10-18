@@ -88,52 +88,20 @@ public:
         delete temp;  // Free memory of removed node.
     }
 
-    void pop_front() {
-        
-
-    }
-    
-
-    // Method to add a node at the end of the list.
-    void push_back(int v) {
-        Node* newNode = new Node(v);
-        if (!tail) {
-            head = tail = newNode;
-        } else {
-            tail->next = newNode;
-            newNode->prev = tail;
-            tail = newNode;
-        }
-    }
-
-    // method to add node at beginning 
-    void push_front(int v) {
-        Node* newNode = new Node(v);
-        if (!head) {
-            head = tail = newNode;
-        } else {
-            newNode->next = head;
-            head->prev = newNode;
-            head = newNode;
-        }
-    }
-
     // method to remove first node
     void pop_front() {
         if (!head) {
             cout << "List is empty." << endl;
             return;
         }
-
-        Node* temp = head;// Temporarily hold the current head.
-        
+        Node *temp = head;
         if (head->next) {
             head = head->next;
             head->prev = nullptr;
-        } else {
+        } else
             head = tail = nullptr;
-        }
         delete temp;
+
     }
 
     // Method to remove the last node in the list.
@@ -142,9 +110,7 @@ public:
             cout << "List is empty." << endl;
             return;
         }
-
         Node* temp = tail;
-        
         if (tail->prev) {
             tail = tail->prev;
             tail->next = nullptr;
@@ -152,6 +118,13 @@ public:
             head = tail = nullptr;
         }
         delete temp;
+    }
+
+    // method to print list
+    void print() {
+        Node* current = head;
+        if (!curre
+
     }
 
     // Destructor to clean up the list when it's no longer needed.
@@ -163,36 +136,12 @@ public:
         }
     }
 
-    // method to print list
-    void print() {
-        Node* current = head;
-        
-        if (!current) {
-            cout << "List is empty." << endl;
-            return;
-        }
-        while (current) {
-            cout << current->data << " ";
-            current = current->next;
-        }
-        cout << endl;
-    }
-
-    // Method to print the list in reverse order.
-    void print_reverse() {
-        Node* current = tail;
-        if (!current) {
-            cout << "List is empty." << endl;
-            return;
-        }
-        while (current) {
-            cout << current->data << " ";
-            current = current->prev;
-        }
-        
-        cout << endl;
-    }
 };
+
+// Function to load names from file into a vector
+vector<string> loadNames(const string& filename) {
+    vector<string> names;
+    ifstream file(fil
 
 // main function
 int main() {
