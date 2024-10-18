@@ -7,16 +7,15 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
-#include <sstream>
 
 using namespace std;
 
-const int MIN_NR = 10, MAX_NR = 99, MIN_LS = 5, MAX_LS = 20; // Constants for potential use in other parts of the program.
+const int MIN_NR = 10, MAX_NR = 99, MIN_LS = 5, MAX_LS = 20;
 
 // DoublyLinkedList class
 class DoublyLinkedList {
 private:
-    struct Node { // Node structure representing a single node in the list.
+    struct Node {
         string data;
         Node* prev;
         Node* next;
@@ -24,92 +23,49 @@ private:
             data = val;
             prev = p;
             next = n;
+        }
     };
 
-    Node* head; // pointer to the first node
-    Node* tail; // pointer to the last node
+    Node* head;
+    Node* tail;
 
-public:
-    // Constructor for initializing an empty list.
+public: 
+    // Constructor to initialize an empty doubly linked list
     DoublyLinkedList() : head(nullptr), tail(nullptr) {}
 
-    // method to insert a new node
-    void insert_after(string value, int position) {
-        if (position < 0) {
-            cout << "Position must be >= 0." << endl;
-            return;
-        }
+    // Method to add a new node at the end of the list
+    void push_back(string value) {
         Node* newNode = new Node(value);
-        if (!head) {
+        if (!tail) {
             head = tail = newNode;
-            return;
-        }
-        Node* temp = head;
-        for (int i = 0; i < position && temp; ++i)
-            temp = temp->next;
-        if (!temp) {
-            cout << "Position exceeds list size. Node not inserted.\n";
-            delete newNode;
-            return;
-        }
-        newNode->next = temp->next;
-        newNode->prev = temp;
-        if (temp->next)
-            temp->next->prev = newNode;
-        else
+        } else {
+            tail->next = newNode;
+            newNode->prev = tail;
             tail = newNode;
-        temp->next = newNode;
+        }
     }
 
-    // method to delete first value in the list
-    void delete_val(string value) {
-        if (!head) return; // if list empty exit
-
-        Node* temp = head;
-        // Search for the value to delete
-        while (temp && temp->data != value)
-            temp = temp->next;
-
-        // If value not found
-        if (!temp) return;
-
-        // Update links to remove the node from the list
-        if (temp->prev)
-            temp->prev->next = temp->next;
-        else
-            head = temp->next;
-
-        // Adjust connections to remove the found node.
-        if (temp->next)
-            temp->next->prev = temp->prev;
-        else
-            tail = temp->prev;
-
-        delete temp;  // Free memory of removed node.
+    // Method to get the data of the first node
+    string front() {
+        return head ? head->data : "";
     }
-
-    // method to remove first node
+    // Method to remove the first node from the list
     void pop_front() {
         if (!head) {
-            cout << "List is empty." << endl;
             return;
         }
-        Node *temp = head;
+        Node* temp = head;
         if (head->next) {
             head = head->next;
             head->prev = nullptr;
-        } else
+        } else {
             head = tail = nullptr;
+        }
         delete temp;
-
     }
 
-    // Method to remove the last node in the list.
     void pop_back() {
-        if (!tail) {
-            cout << "List is empty." << endl;
-            return;
-        }
+        if (!tail) return;
         Node* temp = tail;
         if (tail->prev) {
             tail = tail->prev;
@@ -120,7 +76,46 @@ public:
         delete temp;
     }
 
-    // method to print list
+    void delete_val(string value) {
+        if (!head) return;
+        Node* temp = head;
+        while (temp && temp->data != value)
+            temp = temp->next;
+
+        if (!temp) return;
+        if (temp->prev)
+            temp->prev->next = temp->next;
+        else
+            head = temp->next;
+
+        if (temp->next)
+            temp->next->prev = temp->prev;
+        else
+            tail = temp->prev;
+
+        delete temp;
+    }
+
+    int getSize() {
+        Node* temp = head;
+        int count = 0;
+        while (temp) {
+            count++;
+            temp = temp->next;
+        }
+        return count;
+    }
+
+    string randCustomer() {
+        if (!head) return "";
+        int index = rand() % getSize();
+        Node* temp = head;
+        for (int i = 0; i < index; ++i) {
+            temp = temp->next;
+        }
+        return temp->data;
+    }
+
     void print() {
         Node* current = head;
         if (!current) {
@@ -132,10 +127,8 @@ public:
             current = current->next;
         }
         cout << endl;
-
     }
 
-    // Destructor to clean up the list when it's no longer needed.
     ~DoublyLinkedList() {
         while (head) {
             Node* temp = head;
@@ -143,7 +136,6 @@ public:
             delete temp;
         }
     }
-
 };
 
 // Function to load names from file into a vector
@@ -157,25 +149,61 @@ vector<string> loadNames(const string& filename) {
     return names;
 }
 
-// main function
+// Main function
 int main() {
-    srand(time(0)); // Seed for randomness
+    srand(static_cast<unsigned>(time(0))); // Seed for randomness
     DoublyLinkedList queue;
     vector<string> names = loadNames("names.txt");
 
     cout << "Store opens:" << endl;
-    for (int i = 0; i < 5; ++i) {
-        queue.push_back(names[rand() % names.size()]);
-        cout << "    " << names.back() << " joined the line" << endl;
+    for (int i = 0; i < 5; ++i) { // Initially adding 5 customers
+        string newCustomer = names[rand() % names.size()];
+        queue.push_back(newCustomer);
+        cout << "    " << newCustomer << " joined the line." << endl;
     }
 
     for (int timeStep = 1; timeStep <= 20; ++timeStep) {
         cout << "Time step #" << timeStep << ":" << endl;
 
-        // Check if a customer is to be served (40% probability)
+        // Check if a customer is served (40% probability)
         if (rand() % 100 < 40 && queue.getSize() > 0) {
-            string servedCustomer = q
+            string servedCustomer = queue.front();
+            queue.pop_front();
+            cout << "    " << servedCustomer << " is served." << endl;
+        }
 
-    
+        // Check if a new customer joins (60% probability)
+        if (rand() % 100 < 60) {
+            string newCustomer = names[rand() % names.size()];
+            queue.push_back(newCustomer);
+            cout << "    " << newCustomer << " joined the line." << endl;
+        }
+
+        // Check if the last customer leaves (20% probability)
+        if (queue.getSize() > 0 && rand() % 100 < 20) {
+            string leavingCustomer = queue.randCustomer();
+            queue.delete_val(leavingCustomer);
+            cout << "    " << leavingCustomer << " left the line before being served." << endl;
+        }
+
+        // Check if any particular customer leaves (10% probability)
+        if (queue.getSize() > 0 && rand() % 100 < 10) {
+            string leavingCustomer = queue.randCustomer();
+            queue.delete_val(leavingCustomer);
+            cout << "    " << leavingCustomer << " left the line." << endl;
+        }
+
+        // VIP customer joining (10% probability)
+        if (rand() % 100 < 10) {
+            string vipCustomer = names[rand() % names.size()] + " (VIP)";
+            queue.push_back(vipCustomer);
+            cout << "    " << vipCustomer << " joins the front of the line." << endl;
+        }
+
+        // Print current state of the line
+        cout << "Resulting line: ";
+        queue.print();
+    }
+
     return 0;
 }
