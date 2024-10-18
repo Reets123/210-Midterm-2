@@ -2,6 +2,13 @@
 // COMSC-210 - Ibrahim Alatig 
 
 #include <iostream>
+#include <fstream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+#include <sstream>
+
 using namespace std;
 
 const int MIN_NR = 10, MAX_NR = 99, MIN_LS = 5, MAX_LS = 20; // Constants for potential use in other parts of the program.
@@ -10,13 +17,13 @@ const int MIN_NR = 10, MAX_NR = 99, MIN_LS = 5, MAX_LS = 20; // Constants for po
 class DoublyLinkedList {
 private:
     struct Node { // Node structure representing a single node in the list.
-        int data;
+        string data;
         Node* prev;
         Node* next;
-        
-        //  Constructor initializing a new node.
-        Node(int val, Node* p = nullptr, Node* n = nullptr)
-            : data(val), prev(p), next(n) {}
+        Node(string val, Node* p = nullptr, Node* n = nullptr) {
+            data = val;
+            prev = p;
+            next = n;
     };
 
     Node* head; // pointer to the first node
