@@ -1,6 +1,30 @@
 // Midterm #2
 // COMSC-210 - Ibrahim Alatig 
 
+//     DoublyLinkedList          
+// -----------------------
+//  - head: Node*                     
+// - tail: Node*                     
+// ---------------------
+// + DoublyLinkedList()              
+// + push_back(value: string)        
+// + front(): string                 
+// + pop_front(): void               
+// + pop_back(): void                
+// + delete_val(value: string): void  
+// + getSize(): int                  
+// + randCustomer(): string          
+// + print(): void                   
+// + ~DoublyLinkedList()             
+
+//      Node            
+//----------------------
+// - data: string             
+// - prev: Node*              
+// - next: Node*              
+//--------------------
+// + Node(val: string, p: Node*, n: Node*) |
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -64,6 +88,7 @@ public:
         delete temp;
     }
 
+    // Method to remove the last node from the list
     void pop_back() {
         if (!tail) return;
         Node* temp = tail;
@@ -76,6 +101,7 @@ public:
         delete temp;
     }
 
+    // Method to remove value from the list
     void delete_val(string value) {
         if (!head) return;
         Node* temp = head;
@@ -96,6 +122,7 @@ public:
         delete temp;
     }
 
+    // method to get current size of list
     int getSize() {
         Node* temp = head;
         int count = 0;
@@ -106,6 +133,7 @@ public:
         return count;
     }
 
+    // Method to randomly select a customer from list
     string randCustomer() {
         if (!head) return "";
         int index = rand() % getSize();
@@ -116,6 +144,7 @@ public:
         return temp->data;
     }
 
+    // method to print from list
     void print() {
         Node* current = head;
         if (!current) {
@@ -127,8 +156,9 @@ public:
             current = current->next;
         }
         cout << endl;
-    }
+    }   
 
+    // Destructor to clean up all nodes in the list
     ~DoublyLinkedList() {
         while (head) {
             Node* temp = head;
